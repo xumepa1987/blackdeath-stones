@@ -128,7 +128,9 @@ app.get('/ping', (req, res) => res.json({ ok: true, time: new Date().toISOString
 async function sendPush(sub, payload) {
   try {
     await webpush.sendNotification(sub, JSON.stringify(payload));
+    console.log('[push] sent ok');
   } catch (e) {
+    console.error('[push] error', e.statusCode, e.message);
     if (e.statusCode === 410 || e.statusCode === 404) {
       const str = JSON.stringify(sub);
       await Subscription.deleteOne({ subscription: { $exists: true } });
